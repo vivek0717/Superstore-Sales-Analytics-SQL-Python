@@ -122,16 +122,6 @@ superstore-sales-analytics/
 
 ---
 
-## Future Improvements
-
-- Add an interactive **Power BI dashboard**
-- Build a **Tableau version** for comparison
-- Add **cohort analysis** and **Pareto analysis**
-- Deploy project visuals to a portfolio website
-- Convert SQL queries into database-ready scripts with better formatting
-
----
-
 ## Why this project matters
 
 This project demonstrates a complete analytics workflow that recruiters often look for in data analytics roles:
@@ -150,8 +140,3 @@ This project demonstrates a complete analytics workflow that recruiters often lo
 **Vivek Parmar**  
 Aspiring Data Analyst | Business Intelligence Enthusiast | SQL, Python, Power BI
 
----
-
-## Note
-
-This project currently focuses on **Python + SQL + Analytics**. The dashboard layer is planned as the next extension.
