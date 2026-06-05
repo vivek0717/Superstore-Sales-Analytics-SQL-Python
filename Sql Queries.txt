@@ -1,0 +1,130 @@
+----------------------------------------------------------------------
+-- Superstore Sales Analysis - Oracle 11g
+-- Author: <your name>
+-- Description:
+--   Core analysis queries for SUPER_STORE table.
+----------------------------------------------------------------------
+
+-- 1. Overall KPIs
+SELECT
+    ROUND(SUM(sales), 2)             AS total_sales,
+    ROUND(SUM(profit), 2)            AS total_profit,
+    COUNT(DISTINCT order_id)         AS total_orders,
+    COUNT(DISTINCT customer_id)      AS unique_customers
+FROM super_store;
+
+2. Region-wise sales and profit
+
+
+SELECT
+    region,
+    ROUND(SUM(sales), 2)  AS total_sales,
+    ROUND(SUM(profit), 2) AS total_profit
+FROM super_store
+GROUP BY region
+ORDER BY total_sales DESC;
+
+
+-- 3. Category & Sub-category performance
+
+
+SELECT
+    category,
+    sub_category,
+    ROUND(SUM(sales), 2)  AS total_sales,
+    ROUND(SUM(profit), 2) AS total_profit
+FROM super_store
+GROUP BY category, sub_category
+ORDER BY category, total_sales DESC;
+
+
+-- 4. Top 10 products by total sales
+
+SELECT *
+FROM (
+    SELECT
+        product_name,
+        ROUND(SUM(sales), 2)  AS total_sales,
+        ROUND(SUM(profit), 2) AS total_profit
+    FROM super_store
+    GROUP BY product_name
+    ORDER BY total_sales DESC
+)
+WHERE ROWNUM <= 10;
+
+-- 5. Monthly sales over time
+
+
+SELECT
+    TO_CHAR(order_date, 'YYYY') AS year,
+    TO_CHAR(order_date, 'MM')   AS month,
+    ROUND(SUM(sales), 2)        AS monthly_sales
+FROM super_store
+GROUP BY
+    TO_CHAR(order_date, 'YYYY'),
+    TO_CHAR(order_date, 'MM')
+ORDER BY year, month;
+
+
+-- 6. Monthly sales with running total
+
+
+SELECT
+    year,
+    month,
+    monthly_sales,
+    SUM(monthly_sales) OVER (
+        ORDER BY year, month
+    ) AS running_sales
+FROM (
+    SELECT
+        TO_CHAR(order_date, 'YYYY') AS year,
+        TO_CHAR(order_date, 'MM')   AS month,
+        SUM(sales)                  AS monthly_sales
+    FROM super_store
+    GROUP BY
+        TO_CHAR(order_date, 'YYYY'),
+        TO_CHAR(order_date, 'MM')
+) t
+ORDER BY year, month;
+
+
+-- 7. Top 3 products by sales within each category
+
+
+SELECT
+    category,
+    product_name,
+    total_sales,
+    sales_rank_in_category
+FROM (
+    SELECT
+        category,
+        product_name,
+        SUM(sales) AS total_sales,
+        RANK() OVER (
+            PARTITION BY category
+            ORDER BY SUM(sales) DESC
+        ) AS sales_rank_in_category
+    FROM super_store
+    GROUP BY category, product_name
+) t
+WHERE sales_rank_in_category <= 3
+ORDER BY category, total_sales DESC;
+
+
+-- 8. Top 10 customers by profit
+
+
+SELECT *
+FROM (
+    SELECT
+        customer_id,
+        customer_name,
+        ROUND(SUM(sales), 2)  AS total_sales,
+        ROUND(SUM(profit), 2) AS total_profit
+    FROM super_store
+    GROUP BY customer_id, customer_name
+    ORDER BY total_profit DESC
+)
+WHERE ROWNUM <= 10;
