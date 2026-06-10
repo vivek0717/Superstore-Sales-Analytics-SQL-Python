@@ -91,24 +91,7 @@ GitHub Documentation
 
 ---
 
-## Repository Structure
 
-```bash
-superstore-sales-analytics/
-│
-├── README.md
-├── requirements.txt
-├── data/
-│   └── superstore_clean.csv
-├── notebooks/
-│   └── superstore.ipynb
-├── sql/
-│   └── Sql-Queries.txt
-├── reports/
-│   └── project-images-or-plots
-```
-
----
 
 ## Business Questions Answered
 
